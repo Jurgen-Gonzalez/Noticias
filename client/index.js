@@ -132,9 +132,3 @@ function createUsername(idusuario) {
         .then(response => response.json())
         .then(data => loadUser(data['data'], idusuario));
 }
-
-function loadUser(data, idusuario) {
-    data.forEach(function ({ nombre }) {
-
-    });
-}

@@ -24,6 +24,30 @@ class DbService {
         return instance ? instance : new DbService();
     }
 
+    // async insertNews(titulo) {
+    async insertNews(titulo, contenido, idpersonal) {
+        try {
+            const insertId = await new Promise((resolve, reject) => {
+                const query = `INSERT INTO nota (titulo, contenido, idpersonal)
+                                VALUES (?,?,?);`;
+
+                connection.query(query, [titulo, contenido, idpersonal],
+                    (err, result) => {
+                        if (err) reject(new Error(err.message));
+                        resolve(result.insertId);
+                    })
+            });
+            return {
+                idnota: insertId,
+                titulo: titulo,
+                contenido: contenido,
+                idpersonal: idpersonal,
+            };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     async getAllNews() {
         try {
             const response = await new Promise((resolve, reject) => {
@@ -91,32 +115,6 @@ class DbService {
         }
     }
 
-
-    async insertNews(titulo) {
-        // async insertNews(titulo, contenido, idpersonal) {
-        console.log(`${titulo}`);
-        // console.log(`${titulo}, ${contenido}, ${idpersonal}`);
-        try {
-            const insertId = await new Promise((resolve, reject) => {
-                const query = `INSERT INTO nota (titulo, contenido, idpersonal)
-                                VALUES (?,?,?);`;
-
-                connection.query(query, [titulo, 'con', 1],
-                    (err, result) => {
-                        if (err) reject(new Error(err.message));
-                        resolve(result.insertId);
-                    })
-            });
-            return {
-                idnota: insertId,
-                titulo: titulo,
-                contenido: contenido,
-                idpersonal: idpersonal,
-            };
-        } catch (error) {
-            console.log(error);
-        }
-    }
 
     async getPersonnel() {
         try {

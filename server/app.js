@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -7,13 +8,30 @@ dotenv.config();
 const dbService = require('./dbService');
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
+
+// app.get('/post', (request, response) => {
+app.get('/insertNews/:titulo/:contenido/:idpersonal', (request, response) => {
+    // app.post('/insertNews', (request, response) => {
+    const titulo = request.params.titulo;
+    const contenido = request.params.contenido;
+    const idpersonal = request.params.idpersonal;
+    console.log(`${titulo}, ${contenido}, ${idpersonal}`);
+    const db = dbService.getDbServiceInstance();
+
+    const result = db.insertNews(titulo, contenido, idpersonal);
+
+    result
+        .then(data => response.json({ data: data }))
+        .catch(err => console.log(err));
+});
 
 // create
 app.post('/insertNews/:titulo', (request, response) => {
     // app.post('/insertNews/:titulo&:contenido&:idpersonal', (request, response) => {
+    console.log('titulo');
     const { titulo } = request.body;
     // const { titulo, contenido, idpersonal } = request.body;
     // console.log(`${titulo}, ${contenido}, ${idpersonal}`);
